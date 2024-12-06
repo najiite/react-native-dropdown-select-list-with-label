@@ -13,7 +13,7 @@ import {
 
 import { SelectListProps } from '..';
 
-type L1Keys = { key?: any; value?: any; disabled?: boolean | undefined }
+type L1Keys = { key?: any; value?: any; label?: any; disabled?: boolean | undefined }
 
 const SelectList: React.FC<SelectListProps> =  ({
         setSelected,
@@ -44,6 +44,7 @@ const SelectList: React.FC<SelectListProps> =  ({
     const [_firstRender,_setFirstRender] = React.useState<boolean>(true);
     const [dropdown, setDropdown] = React.useState<boolean>(dropdownShown);
     const [selectedval, setSelectedVal] = React.useState<any>("");
+    const [selectedlabel, setSelectedLabel] = React.useState<any>("");
     const [height,setHeight] = React.useState<number>(200)
     const animatedvalue = React.useRef(new Animated.Value(0)).current;
     const [filtereddata,setFilteredData] = React.useState(data)
@@ -170,7 +171,7 @@ const SelectList: React.FC<SelectListProps> =  ({
                     </View>
                 :
                     <TouchableOpacity style={[styles.wrapper,boxStyles]} onPress={() => { if(!dropdown){ Keyboard.dismiss(); slidedown() }else{ slideup() } }}>
-                        <Text style={[{fontFamily},inputStyles]}>{ (selectedval == "") ? (placeholder) ? placeholder : 'Select option' : selectedval  }</Text>
+                        <Text style={[{fontFamily},inputStyles]}>{ (selectedval == "") ? (placeholder) ? placeholder : 'Select option' : selectedlabel  }</Text>
                         {
                             (!arrowicon)
                             ?
@@ -198,11 +199,12 @@ const SelectList: React.FC<SelectListProps> =  ({
                                 filtereddata.map((item: L1Keys,index: number) => {
                                     let key = item.key ?? item.value ?? item;
                                     let value = item.value ?? item;
+                                    let label = item.label ?? item;
                                     let disabled = item.disabled ?? false;
                                     if(disabled){
                                         return(
                                             <TouchableOpacity style={[styles.disabledoption,disabledItemStyles]} key={index} onPress={ () => {}}>
-                                                <Text style={[{color:'#c4c5c6',fontFamily},disabledTextStyles]}>{value}</Text>
+                                                <Text style={[{color:'#c4c5c6',fontFamily},disabledTextStyles]}>{label}</Text>
                                             </TouchableOpacity>
                                         )
                                     }else{
@@ -215,11 +217,12 @@ const SelectList: React.FC<SelectListProps> =  ({
                                                 }
                                                 
                                                 setSelectedVal(value)
+                                                setSelectedLabel(label)
                                                 slideup()
                                                 setTimeout(() => {setFilteredData(data)}, 800)
                                                 
                                             }}>
-                                                <Text style={[{fontFamily},dropdownTextStyles]}>{value}</Text>
+                                                <Text style={[{fontFamily},dropdownTextStyles]}>{label}</Text>
                                             </TouchableOpacity>
                                         )
                                     }
